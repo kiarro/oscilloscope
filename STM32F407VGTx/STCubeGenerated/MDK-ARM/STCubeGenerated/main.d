@@ -33,9 +33,9 @@ stcubegenerated\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pwr_ex
 stcubegenerated\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd.h
 stcubegenerated\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h
 stcubegenerated\main.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h
+stcubegenerated\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 stcubegenerated\main.o: ../Inc/usb_device.h
 stcubegenerated\main.o: ../Middlewares/ST/STM32_USB_Device_Library/Core/Inc/usbd_def.h
 stcubegenerated\main.o: ../Inc/usbd_conf.h
-stcubegenerated\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
 stcubegenerated\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 stcubegenerated\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

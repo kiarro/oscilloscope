@@ -23,6 +23,8 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+#include "usbd_cdc_if.h"
+//#include "main.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -60,7 +62,10 @@ extern PCD_HandleTypeDef hpcd_USB_OTG_FS;
 extern DMA_HandleTypeDef hdma_adc1;
 extern DMA_HandleTypeDef hdma_adc2;
 /* USER CODE BEGIN EV */
-
+int8_t CDC_Receive_FS(uint8_t* Buf, uint32_t *Len);
+uint8_t CDC_Transmit_FS(uint8_t* Buf, uint16_t Len);
+void applySettings(uint8_t* settings);
+//uint8_t q = 0;
 /* USER CODE END EV */
 
 /******************************************************************************/
@@ -199,19 +204,6 @@ void SysTick_Handler(void)
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
 
-//uint32_t pin_t = 6;
-void EXTI0_IRQHandler(void)
-{
-  /* USER CODE BEGIN EXTI0_IRQn 0 */
-//	changeChannel(0, 0);
-//	pin_t = (pin_t - 5)%2 + 6;
-  /* USER CODE END EXTI0_IRQn 0 */
-  HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_0);
-  /* USER CODE BEGIN EXTI0_IRQn 1 */
-	
-  /* USER CODE END EXTI0_IRQn 1 */
-}
-
 /**
   * @brief This function handles DMA2 stream0 global interrupt.
   */
@@ -246,6 +238,45 @@ void DMA2_Stream2_IRQHandler(void)
 void OTG_FS_IRQHandler(void)
 {
   /* USER CODE BEGIN OTG_FS_IRQn 0 */
+//	uint8_t buffer[4];
+//	uint32_t Len = 4;
+//	CDC_Receive_FS(buffer, &Len);
+//	if (buffer[0] > 0){HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);}
+//	else HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_RESET);
+//	if (buffer[1] > 0){HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_SET);}
+//	else HAL_GPIO_WritePin(GPIOD, GPIO_PIN_13, GPIO_PIN_RESET);
+//	if (buffer[2] > 0){HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_SET);}
+//	else HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+//	if (buffer[3] > 0){HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);}
+//	else HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
+//	for (uint8_t i = 0; i<4; i++)
+//	{
+//		char h = buffer[i];
+//		printf("Symbol %d = %d\n\r", i, h);
+//	}
+//	applySettings(buffer);
+	
+	uint8_t buffer[4];
+	//uint8_t new_buffer[8];
+	uint32_t Len = 4;
+	CDC_Receive_FS(buffer, &Len);
+	//CDC_Transmit_FS(buffer, 4);
+	applySettings(buffer);
+//	new_buffer[0] = buffer[0];
+//	new_buffer[1] = buffer[1];
+//	new_buffer[2] = buffer[2];
+//	new_buffer[3] = buffer[3];
+//	new_buffer[4] = (uint8_t)(buffer[0] / 16);
+//	new_buffer[5] = (uint8_t)(buffer[1] / 16);
+//	new_buffer[6] = (uint8_t)(buffer[2] / 16);
+//	new_buffer[7] = (uint8_t)(buffer[3] / 16);
+//	
+//	CDC_Transmit_FS(new_buffer, 8);
+
+
+//	char h = buffer[0];
+//	printf("Symbol = %d\n\r", h);
+	
 	
   /* USER CODE END OTG_FS_IRQn 0 */
   HAL_PCD_IRQHandler(&hpcd_USB_OTG_FS);

@@ -54,7 +54,7 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-void changeChannel(uint32_t ch, uint32_t pin);
+void applySettings(uint8_t* settings);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
