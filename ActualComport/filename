@@ -1,0 +1,7 @@
+Channel 0," "," ",Channel 1," "," ",Channel 2," "," ",Channel 3," "," "
+Time,Reading," ",Time,Reading," ",Time,Reading," ",Time,Reading," "
+10.0," 20."," ",10.0," 50."," ",NAN,NAN," ",NAN,NAN," "
+20.0," 30."," ",20.0," 50."," ",NAN,NAN," ",NAN,NAN," "
+30.0," 40."," ",30.0," 50."," ",NAN,NAN," ",NAN,NAN," "
+a,b
+c
