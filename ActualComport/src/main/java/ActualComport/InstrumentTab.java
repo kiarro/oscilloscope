@@ -11,12 +11,13 @@ public class InstrumentTab extends JPanel implements ActionListener {
     private JLabel modeLabel = new JLabel("Режим приема");
 
     private JButton runButton = new JButton("Пуск");
-    private JButton exportButton = new JButton("Экспортировать");
+    private JButton exportButton = new JButton("Экспорт");
 
     private InstrumentListener instrumentListener;
     InstrumentEvent ev = new InstrumentEvent(this);
 
     private JComboBox modeBox = new JComboBox();
+    //JLabel picLabel = new JLabel(new ImageIcon(Toolkit.getDefaultToolkit().getImage(getClass().getResource("illuminati.png"))));
 
     private JFileChooser fileChooser = new JFileChooser();
 
@@ -80,6 +81,12 @@ public class InstrumentTab extends JPanel implements ActionListener {
         gc.gridy = 2;
         add(exportButton, gc);
 
+//        gc.gridwidth = 2;
+//        gc.gridheight = 2;
+//        gc.gridx = 0;
+//        gc.gridy = 3;
+//        add(picLabel, gc);
+
     }
 
     private void componentInit(){
@@ -130,7 +137,7 @@ public class InstrumentTab extends JPanel implements ActionListener {
         componentInit();
         setSize();
 
-        Border innerBorder = BorderFactory.createTitledBorder("Инструменты");
+        Border innerBorder = BorderFactory.createTitledBorder("Управление");
         Border outerBorder = BorderFactory.createEmptyBorder(5,5,5,5);
         setBorder(BorderFactory.createCompoundBorder(outerBorder, innerBorder));
 

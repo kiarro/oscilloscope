@@ -12,7 +12,7 @@ public class ExtraTab extends JPanel {
     private JLabel periodLabel = new JLabel("Период(мс)");
     private JLabel edgeLabel = new JLabel("Edge");
     private JLabel priorityLabel = new JLabel("Приоритет");
-    private JLabel voltageLabel1 = new JLabel("Максимальный");
+    private JLabel voltageLabel1 = new JLabel("Предельный");
     private JLabel voltageLabel2 = new JLabel("вольтаж");
     private JLabel midVoltageLabel1 = new JLabel("Средний");
     private JLabel midVoltageLabel2 = new JLabel("вольтаж");
@@ -61,10 +61,13 @@ public class ExtraTab extends JPanel {
         periodFill();
     }
 //////////////////////////////////////////////
+
     public boolean isActive() {
     return state;
 }
-/////////////////////////////////////////////////getMainCh getPeriod getEdge getPriority
+
+/////////////////////////////////////////////////
+
     public int getMainCh(){
         return firstInt(sourceBox.getSelectedItem().toString());
     }
@@ -107,6 +110,7 @@ public class ExtraTab extends JPanel {
     }
 
 //////////////////////
+
     public void setEnabled(boolean state){
         this.state = state;
 
@@ -227,6 +231,8 @@ public class ExtraTab extends JPanel {
 
         boxFill();
         layoutSetUp();
+        voltageLabel1.setFont(new Font(voltageLabel1.getFont().getName(), Font.BOLD, 11));
+        voltageLabel2.setFont(new Font(voltageLabel2.getFont().getName(), Font.BOLD, 11));
     }
 
     public ExtraTab(){

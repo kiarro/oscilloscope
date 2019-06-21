@@ -7,6 +7,7 @@ import java.lang.String;
 
 import javax.swing.*;
 import java.awt.*;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.nio.charset.Charset;
 
@@ -16,6 +17,7 @@ public class MainFrame extends JFrame {
     private Toolbar toolbar = new Toolbar();
     private ChartPane chart = new ChartPane();
     private OptionsTab optionsTab = new OptionsTab();
+    private JLabel meter = new JLabel("");
 
     private String portName = " ";
     private String portMode = null;
@@ -76,19 +78,31 @@ public class MainFrame extends JFrame {
                     }
                     switch (portMode){
                         case ("Дата логгер"):
-                            chart.addStraight(calculateReadings(intBuffer));
+                            addStraight(calculateReadings(intBuffer));
                             break;
                         case ("Осциллограф"):
                             chart.addPeriodic(calculateReadings(intBuffer));
                             break;
                     }
                     try {
-                        System.out.println((long)portFreq);
                         Thread.sleep((long)portFreq);
                     } catch (Exception e) {}
                 }
             });
         }catch (Exception e) { chart.changeTitle("tried to addDataListener"); e.printStackTrace(); }
+    }
+
+    private void addStraight(float[] readings){
+        String tempStr = "";
+        for (int k = 0; k < readings.length; k++)
+            if(activeChannels[k])
+            {
+                double temp = readings[k];
+                tempStr += "    Channel "+ k +" = "+(double)Math.round(temp*100000d)/100000d;
+                while(tempStr.length()%23 != 0)
+                    tempStr += "0";
+            }
+        meter.setText(tempStr);
     }
 
     private void exportGraph(String filePath) {
@@ -176,6 +190,7 @@ public class MainFrame extends JFrame {
             String string = SourceString + ProbeString + CoupleString + "1";
             Bytes[i] = Byte.parseByte(string, 2);   //conversion from string to decimal
         }
+
         comPort.writeBytes(Bytes, 4);
     }
 
@@ -207,16 +222,19 @@ public class MainFrame extends JFrame {
 //////////////////////////////////////////////////////////////////////////////////////
     public MainFrame() {
 
-        super("Осциллограф v0.9");
+        super("Осциллограф v0.999");
 
         setLayout(new BorderLayout());
 
+        meter.setSize(600, 500);
+        meter.setFont(new Font(meter.getFont().getName(), Font.PLAIN, 16));
         optionsTab.setOptionsListener(new OptionsListener() {
             @Override
             public void optionsEventOccurred(OptionsEvent e) {
 
                 portState = e.isActive();
                 if (!portState){
+                    allSettings(e.getMainSrc(), e.isExport(), e.getFile_path(), e.getEdge(), e.getPriority());
                     return;
                 }
 
@@ -243,7 +261,6 @@ public class MainFrame extends JFrame {
                         chart.changeTitle("Открываем COMPORT");
                     }
                 }
-
                 // Export check
                 if (e.isExport()) {
                     exportGraph(e.getFile_path());
@@ -263,17 +280,30 @@ public class MainFrame extends JFrame {
                     chart.clearChart();
                     portState = tempState;
                 }
+                if(!workState)
+                {
+                    remove(meter);
+                    add(chart, BorderLayout.WEST);
+                    chart.setOscilloscope(e.getPeriod(), e.getPriority(), e.getEdge(),
+                            e.getMidVoltage(),e.getMaxVoltage());
+                    chart.chartSetUp(e.getActiveChannels(), portFreq, e.getMainSrc(), e.getChannelPoss(), e.getChannelScales());
+                }
                 if(portState){
-                    System.out.println("ahhaha");
+                    activeChannels = e.getActiveChannels();
                     switch (portMode){
                         case ("Осциллограф"):
+                            remove(meter);
+                            add(chart, BorderLayout.WEST);
                             chart.setOscilloscope(e.getPeriod(), e.getPriority(), e.getEdge(),
                                     e.getMidVoltage(),e.getMaxVoltage());
                             break;
                         default:
+                            remove(chart);
+                            add(meter, BorderLayout.WEST);
+                            chart.clearChart();
                             break;
                     }
-                    chart.chartSetUp(e.getActiveChannels(), portFreq, e.getMainSrc(), e.getChannelPoss());
+                    chart.chartSetUp(e.getActiveChannels(), portFreq, e.getMainSrc(), e.getChannelPoss(), e.getChannelScales());
                     // Micro-controller setup
                     sendChParameters(e.getChannelSrcs(), e.getChannelProbes(), e.getChannelCoups());
 
@@ -285,6 +315,7 @@ public class MainFrame extends JFrame {
                 allSettings(e.getMainSrc(), e.isExport(), e.getFile_path(), e.getEdge(), e.getPriority());
 
                 if (!workState && portState) {
+
                     workState = true;
                     activateCOMPort();
                     return;
@@ -297,7 +328,7 @@ public class MainFrame extends JFrame {
         add(toolbar, BorderLayout.NORTH);
         setSize(1300, 500);
         setResizable(false);
-        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("osc.png")));
+        //setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("osc.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
 

@@ -17,7 +17,7 @@ public class OptionsEvent extends EventObject {
 
     private int[] channelSrcs = new int[4];
     private int[] channelProbes = new int[4];
-    private int[] channelScales = new int[4];
+    private float[] channelScales = new float[4];
     private int[] channelPoss = new int[4];
 
     private String receiveMode = null;
@@ -131,11 +131,11 @@ public class OptionsEvent extends EventObject {
         this.channelCoups = channelsCoup;
     }
 
-    public int[] getChannelScales() {
+    public float[] getChannelScales() {
         return channelScales;
     }
 
-    public void setChannelScales(int[] channelsScale) {
+    public void setChannelScales(float[] channelsScale) {
         this.channelScales = channelsScale;
     }
 
@@ -154,7 +154,6 @@ public class OptionsEvent extends EventObject {
     public void setActiveChannels(boolean[] activeChannels) {
         this.activeChannels = activeChannels;
     }
-
 
     public OptionsEvent (Object source) {
         super(source);

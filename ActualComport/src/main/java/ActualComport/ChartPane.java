@@ -29,6 +29,8 @@ public class ChartPane extends JPanel {
     private int mainCh = -1;
     private int[] readingAddition = new int[4];
 
+    private float[] readingScales = new float[4];
+
     private boolean borderOnChart = false;
     private boolean centerAxisOnChart = false;
 
@@ -80,10 +82,11 @@ public class ChartPane extends JPanel {
         }
     }
 
-    public void chartSetUp(boolean[] activeChannels, double freq, int mainCh, int[] additions){
+    public void chartSetUp(boolean[] activeChannels, double freq, int mainCh, int[] additions, float[] scales){
         seriesPresent(activeChannels);
         this.freq = freq;
         this.mainCh = mainCh;
+        readingScales = scales;
         readingAddition = additions;
     }
 
@@ -91,7 +94,8 @@ public class ChartPane extends JPanel {
         for(int i = 0; i < seriesOnChart.length; i++)
             if (seriesOnChart[i]){
                 try {
-                    series[i].add(x, readings[i] + readingAddition[i]);
+                    System.out.println(readings[i]*readingScales[i] + readingAddition[i]);
+                    series[i].add(x, readings[i]*readingScales[i] + readingAddition[i]);
             } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
                 }
             }
@@ -105,7 +109,9 @@ public class ChartPane extends JPanel {
                         for(int i = 0; i < seriesOnChart.length; i++)
                             if (seriesOnChart[i]) {
                                 try {
-                                    series[i].add(x, readings[i] + readingAddition[i]);
+                                    if (readings[i]*readingScales[i] + readingAddition[i] > maxValue)
+                                        series[i].add(x, maxValue);
+                                    else series[i].add(x, readings[i]*readingScales[i] + readingAddition[i]);
                                 } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
                                 }
                             }
@@ -113,21 +119,45 @@ public class ChartPane extends JPanel {
                     else {
                         switch (edge){
                             case("-+"):
-                                if((prevY < 0) && (readings[mainCh] + readingAddition[mainCh] - midValue >= 0)) {
+                                if((prevY < 0) && (readings[mainCh]*readingScales[mainCh] + readingAddition[mainCh] - midValue >= 0)) {
                                     restartChart();
+                                    for(int i = 0; i < seriesOnChart.length; i++)
+                                        if (seriesOnChart[i]) {
+                                            try {
+                                                if (x <= period) {
+                                                    if (readings[i] * readingScales[i] + readingAddition[i] > maxValue)
+                                                        series[i].add(x, maxValue);
+                                                    else series[i].add(x, readings[i] * readingScales[i] + readingAddition[i]);
+                                                }
+                                            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+
+                                            }
+                                        }
                                 }
                                 try {
-                                    prevY = readings[mainCh] + readingAddition[mainCh] - midValue;
+                                    prevY = readings[mainCh]*readingScales[mainCh] + readingAddition[mainCh] - midValue;
                                 } catch (NullPointerException | IndexOutOfBoundsException e) {
                                     System.out.println("kek");
                                 }
                                 break;
                             case("+-"):
-                                if((prevY > 0) && (readings[mainCh] + readingAddition[mainCh] - midValue <= 0)) {
+                                if((prevY > 0) && (readings[mainCh]*readingScales[mainCh] + readingAddition[mainCh] - midValue <= 0)) {
                                     restartChart();
+                                    for(int i = 0; i < seriesOnChart.length; i++)
+                                        if (seriesOnChart[i]) {
+                                            try {
+                                                if (x <= period) {
+                                                    if (readings[i] * readingScales[i] + readingAddition[i] > maxValue)
+                                                        series[i].add(x, maxValue);
+                                                    else series[i].add(x, readings[i] * readingScales[i] + readingAddition[i]);
+                                                }
+                                            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+
+                                            }
+                                        }
                                 }
                                 try {
-                                    prevY = readings[mainCh] + readingAddition[mainCh] - midValue;
+                                    prevY = readings[mainCh]*readingScales[mainCh] + readingAddition[mainCh] - midValue;
                                 } catch (NullPointerException | IndexOutOfBoundsException e) {
                                     System.out.println("kek");
                                 }
@@ -139,28 +169,71 @@ public class ChartPane extends JPanel {
                     for(int i = 0; i < seriesOnChart.length; i++)
                         if (seriesOnChart[i]) {
                             try {
-                                series[i].add(x, readings[i] + readingAddition[i]);
+                                if (x <= period) {
+                                    if (readings[i] * readingScales[i] + readingAddition[i] > maxValue)
+                                        series[i].add(x, maxValue);
+                                    else series[i].add(x, readings[i] * readingScales[i] + readingAddition[i]);
+                                }
+                                else {
+                                    restartChart();
+                                    for(int j = 0; j < seriesOnChart.length; j++)
+                                        if (seriesOnChart[j]) {
+                                            try {
+                                                if (x <= period) {
+                                                    if (readings[j] * readingScales[j] + readingAddition[j] > maxValue)
+                                                        series[j].add(x, maxValue);
+                                                    else series[j].add(x, readings[j] * readingScales[j] + readingAddition[j]);
+                                                }
+                                            } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+
+                                            }
+                                        }
+                                }
                             } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
 
                             }
                         }
                     switch (edge){
                         case("-+"):
-                            if((prevY < 0) && (readings[mainCh] + readingAddition[mainCh] - midValue >= 0)) {
+                            if((prevY < 0) && (readings[mainCh]*readingScales[mainCh] + readingAddition[mainCh] - midValue >= 0)) {
                                 restartChart();
+                                for(int i = 0; i < seriesOnChart.length; i++)
+                                    if (seriesOnChart[i]) {
+                                        try {
+                                            if (x <= period) {
+                                                if (readings[i] * readingScales[i] + readingAddition[i] > maxValue)
+                                                    series[i].add(x, maxValue);
+                                                else series[i].add(x, readings[i] * readingScales[i] + readingAddition[i]);
+                                            }
+                                        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+
+                                        }
+                                    }
                             }
                             try {
-                                prevY = readings[mainCh] + readingAddition[mainCh] - midValue;
+                                prevY = readings[mainCh]*readingScales[mainCh] + readingAddition[mainCh] - midValue;
                             } catch (NullPointerException | IndexOutOfBoundsException e) {
                                 System.out.println("kek");
                             }
                             break;
                         case("+-"):
-                            if((prevY > 0) && (readings[mainCh] + readingAddition[mainCh] - midValue <= 0)) {
+                            if((prevY > 0) && (readings[mainCh]*readingScales[mainCh] + readingAddition[mainCh] - midValue <= 0)) {
                                 restartChart();
+                                for(int i = 0; i < seriesOnChart.length; i++)
+                                    if (seriesOnChart[i]) {
+                                        try {
+                                            if (x <= period) {
+                                                if (readings[i] * readingScales[i] + readingAddition[i] > maxValue)
+                                                    series[i].add(x, maxValue);
+                                                else series[i].add(x, readings[i] * readingScales[i] + readingAddition[i]);
+                                            }
+                                        } catch (IllegalArgumentException | IndexOutOfBoundsException e) {
+
+                                        }
+                                    }
                             }
                             try {
-                                prevY = readings[mainCh] + readingAddition[mainCh] - midValue;
+                                prevY = readings[mainCh]*readingScales[mainCh] + readingAddition[mainCh] - midValue;
                             } catch (NullPointerException | IndexOutOfBoundsException e) {
                                 System.out.println("kek");
                             }

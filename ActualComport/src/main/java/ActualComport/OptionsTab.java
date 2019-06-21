@@ -96,7 +96,7 @@ public class OptionsTab extends JPanel  {
                 channels[2].getPosition(), channels[3].getPosition()));
         ev.setChannelProbes(StrToIntArray(channels[0].getProbe(), channels[1].getProbe(),
                 channels[2].getProbe(), channels[3].getProbe()));
-        ev.setChannelScales(StrToIntArray(channels[0].getScale(), channels[1].getScale(),
+        ev.setChannelScales(StrToFloatArray(channels[0].getScale(), channels[1].getScale(),
                 channels[2].getScale(), channels[3].getScale()));
     }
 
@@ -125,6 +125,23 @@ public class OptionsTab extends JPanel  {
         temp[2] = firstInt(str2);
         temp[3] = firstInt(str3);
         return temp;
+    }
+
+    private float[] StrToFloatArray(String str0, String str1, String str2, String str3){
+        float[] temp = new float[4];
+        temp[0] = firstFloat(str0);
+        temp[1] = firstFloat(str1);
+        temp[2] = firstFloat(str2);
+        temp[3] = firstFloat(str3);
+        return temp;
+    }
+
+    private float firstFloat(String string){
+        int i = 0;
+        while (i < string.length() && !Character.isDigit(string.charAt(i))) i++;
+        int j = i;
+        while (j < string.length() && (Character.isDigit(string.charAt(j)) || string.charAt(j)=='.')) j++;
+        return Float.parseFloat(string.substring(i, j));
     }
 
     private boolean[] boolToArray(boolean ch0, boolean ch1, boolean ch2, boolean ch3){

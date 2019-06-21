@@ -9,8 +9,8 @@ public class ChannelTab extends JPanel {
     private JLabel sourceLabel = new JLabel("Источник");
     private JLabel probeLabel = new JLabel("Проба");
     private JLabel couplingLabel = new JLabel("Сцепка ");
-    private JLabel voltage1Label = new JLabel("Масштаб");
-    private JLabel voltage2Label = new JLabel("Вольт/деление");
+    private JLabel voltage1Label = new JLabel("Множитель");
+    private JLabel voltage2Label = new JLabel("значений");
     private JLabel position1Label = new JLabel("Позиция по");
     private JLabel position2Label = new JLabel("Вертикали");
 
@@ -19,8 +19,8 @@ public class ChannelTab extends JPanel {
     private JComboBox sourceBox = new JComboBox<String>();
     private JComboBox probeBox = new JComboBox<String>();
     private JComboBox couplingBox = new JComboBox<String>();
-    private JComboBox voltageBox = new JComboBox<String>();
     private JSpinner positionBox;
+    private JSpinner voltageBox;
 
 
     public String getSource(){
@@ -36,7 +36,7 @@ public class ChannelTab extends JPanel {
     }
 
     public String getScale(){
-        return voltageBox.getSelectedItem().toString();
+        return voltageBox.getValue().toString();
     }
 
     public String getPosition(){
@@ -48,7 +48,7 @@ public class ChannelTab extends JPanel {
     }
 
     private void sourceFill(){
-        for (int i = 0; i < 13; i++)
+        for (int i = 0; i < 12; i++)
             sourceBox.addItem("Ножка "+ i);
     }
 
@@ -60,13 +60,8 @@ public class ChannelTab extends JPanel {
     }
 
     private void voltageFill(){
-        voltageBox.addItem("1 мВ");
-        voltageBox.addItem("5 мВ");
-        voltageBox.addItem("10 мВ");
-        voltageBox.addItem("50 мВ");
-        voltageBox.addItem("100 мВ");
-        voltageBox.addItem("500 мВ");
-        voltageBox.addItem("1 В");
+        SpinnerModel model1 = new SpinnerNumberModel(1,0,10,0.1);
+        voltageBox = new JSpinner(model1);
     }
 
     private void coupFill(){
